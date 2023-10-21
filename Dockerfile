@@ -10,7 +10,7 @@ ENV GAME_APK_NAME "com.mycompany.gamename"
 ENV GAME_NAME "Game Name"
 
 # Install operational system dependencies
-RUN pacman -Syu --noconfirm && pacman -S jdk11-openjdk jdk17-openjdk unzip --noconfirm
+RUN pacman -Syu --noconfirm && pacman -S jdk11-openjdk jdk17-openjdk unzip imagemagick --noconfirm
 
 # Install Android Command-line tools
 RUN curl https://dl.google.com/android/repository/commandlinetools-linux-${SDK_VERSION}.zip --output cmdline-tools.zip
@@ -45,10 +45,16 @@ RUN printf "storePassword=123456\nkeyPassword=123456\nkeyAlias=a\nstoreFile=/ope
 RUN ./gradlew assembleRelease
 RUN rm keystore.properties game_certificate.jks /openbor/engine/android/app/build/outputs/apk/release/OpenBOR.apk
 
+# Remove icons
+RUN rm /openbor/engine/android/app/src/main/res/drawable-hdpi/icon.png
+RUN rm /openbor/engine/android/app/src/main/res/drawable-ldpi/icon.png
+RUN rm /openbor/engine/android/app/src/main/res/drawable-mdpi/icon.png
+
 # Volumes
 RUN mkdir /output
 VOLUME /game_certificate.jks
 VOLUME /bor.pak
+VOLUME /icon.png
 VOLUME /output
 
 # Run build
